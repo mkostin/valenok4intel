@@ -1,0 +1,9 @@
+C:\Users\maxim.kostin\Documents\Visual Studio 2013\Projects\Valenok4Fun\bin\x64\Debug\FF_EmotionViewer.cs.exe
+C:\Users\maxim.kostin\Documents\Visual Studio 2013\Projects\Valenok4Fun\bin\x64\Debug\FF_EmotionViewer.cs.pdb
+C:\Users\maxim.kostin\Documents\Visual Studio 2013\Projects\Valenok4Fun\bin\x64\Debug\libpxcclr.cs.dll
+C:\Users\maxim.kostin\Documents\Visual Studio 2013\Projects\Valenok4Fun\obj\x64\Debug\Valenok4Fun.csprojResolveAssemblyReference.cache
+C:\Users\maxim.kostin\Documents\Visual Studio 2013\Projects\Valenok4Fun\obj\x64\Debug\emotion_viewer.cs.MainForm.resources
+C:\Users\maxim.kostin\Documents\Visual Studio 2013\Projects\Valenok4Fun\obj\x64\Debug\FF_EmotionViewer.cs.Properties.Resources.resources
+C:\Users\maxim.kostin\Documents\Visual Studio 2013\Projects\Valenok4Fun\obj\x64\Debug\Valenok4Fun.csproj.GenerateResource.Cache
+C:\Users\maxim.kostin\Documents\Visual Studio 2013\Projects\Valenok4Fun\obj\x64\Debug\FF_EmotionViewer.cs.exe
+C:\Users\maxim.kostin\Documents\Visual Studio 2013\Projects\Valenok4Fun\obj\x64\Debug\FF_EmotionViewer.cs.pdb
