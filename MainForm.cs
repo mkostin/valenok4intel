@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace emotion_viewer.cs
@@ -17,6 +18,7 @@ namespace emotion_viewer.cs
         private bool isValidateState = false;
 
         private TextBox actualTextBox;
+        private List<string> emotions = new List<string>();
 
         public PXCMSession session;
         private volatile bool closing = false;
@@ -126,18 +128,6 @@ namespace emotion_viewer.cs
             RadioCheck(sender, "Profile");
         }
 
-        private void Start_Click(object sender, EventArgs e)
-        {
-            MainMenu.Enabled = false;
-            Start.Enabled = false;
-            Stop.Enabled = true;
-
-            stop = false;
-            System.Threading.Thread thread = new System.Threading.Thread(DoTracking);
-            thread.Start();
-            System.Threading.Thread.Sleep(5);
-        }
-
         delegate void DoTrackingCompleted();
         private void DoTracking()
         {
@@ -148,8 +138,6 @@ namespace emotion_viewer.cs
             this.Invoke(new DoTrackingCompleted(
                 delegate
                 {
-                    Start.Enabled = true;
-                    Stop.Enabled = false;
                     MainMenu.Enabled = true;
                     if (closing) Close();
                 }
@@ -185,7 +173,6 @@ namespace emotion_viewer.cs
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             stop = true;
-            e.Cancel = Stop.Enabled;
             closing = true;
         }
 
@@ -193,11 +180,14 @@ namespace emotion_viewer.cs
         public void UpdateStatus(string status)
         {
             Status2.Invoke(new UpdateStatusDelegate(delegate(string s) { StatusLabel.Text = s; }), new object[] { status });
-        }
 
-        private void Stop_Click(object sender, EventArgs e)
-        {
-            stop = true;
+            if (this.stop)
+            {
+                this.isLearnState = false;
+                this.isValidateState = false;
+                Status2.Invoke(new UpdateStatusDelegate(delegate(string s) { this.button1.Text = "Learn"; }), new object[] { status });
+                Status2.Invoke(new UpdateStatusDelegate(delegate(string s) { this.button3.Text = "Enter key"; }), new object[] { status });
+            }
         }
 
         public void DisplayBitmap(Bitmap picture)
@@ -214,7 +204,7 @@ namespace emotion_viewer.cs
             {
                 if (bitmap == null) return;
                 if (!(sender is PictureBox)) return;
-                if (Scale2.Checked)
+                if (true)
                 {
                     /* Keep the aspect ratio */
                     Rectangle rc = ((PictureBox)sender).ClientRectangle;
@@ -255,61 +245,14 @@ namespace emotion_viewer.cs
             RadioCheck(sender, "Pipeline");
         }
 
-        private void Live_Click(object sender, EventArgs e)
-        {
-            Playback.Checked = Record.Checked = false;
-            Live.Checked = true;
-        }
-
-        private void Playback_Click(object sender, EventArgs e)
-        {
-            Live.Checked = Record.Checked = false;
-            Playback.Checked = true;
-
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = @"RSSDK clip|*.rssdk|All files|*.*";
-            ofd.CheckFileExists = true;
-            ofd.CheckPathExists = true;
-            try
-            {
-                filename = (ofd.ShowDialog() == DialogResult.OK) ? ofd.FileName : null;
-            }
-            finally
-            {
-                ofd.Dispose();
-
-            }
-        }
-
         public bool GetPlaybackState()
         {
-            return Playback.Checked;
-        }
-
-
-
-        private void Record_Click(object sender, EventArgs e)
-        {
-            Live.Checked = Playback.Checked = false;
-            Record.Checked = true;
-
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = @"RSSDK clip|*.rssdk|All files|*.*";
-            sfd.CheckPathExists = true;
-            sfd.OverwritePrompt = true;
-            try
-            {
-                filename = (sfd.ShowDialog() == DialogResult.OK) ? sfd.FileName : null;
-            }
-            finally
-            {
-                sfd.Dispose();
-            }
+            return false;
         }
 
         public bool GetRecordState()
         {
-            return Record.Checked;
+            return false;
         }
 
         public void DrawLocation(PXCMEmotion.EmotionData[] data)
@@ -322,7 +265,7 @@ namespace emotion_viewer.cs
                 using (Brush brushTxt = new SolidBrush(Color.Cyan))
                 using (Font font = new Font(Font.FontFamily, 11, FontStyle.Bold))
                 {
-                    if (LocationCheck.Checked)
+                    if (true)
                     {
                         Point[] points4 =
                         {
@@ -409,8 +352,6 @@ namespace emotion_viewer.cs
                                     }
                                 }
 
-                                
-
                                 if (!validate)
                                 {
                                     list = new List<string>();
@@ -425,14 +366,16 @@ namespace emotion_viewer.cs
 
                             this.actualTextBox.Lines = list.ToArray();
 
+                            if (list.Count > 2)
+                            {
+                                this.stop = true;
+                            }
+
                         }), new object[] { emotion });
                     }
                 }
             }
-
         }
-
-        private List<string> emotions = new List<string>();
 
         public string GetFileName()
         {
